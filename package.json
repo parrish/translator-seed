@@ -1,0 +1,18 @@
+{
+  "name": "translator-seed",
+  "bin": {
+    "seed-translation": "./bin/seed-translation"
+  },
+  "version": "0.0.1",
+  "description": "Seeds a language file from a Zooniverse project to the API",
+  "main": "index.js",
+  "dependencies": {
+    "coffee-script": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/parrish/translator-seed"
+  },
+  "author": "Michael Parrish",
+  "license": "MIT"
+}
