@@ -1,7 +1,10 @@
 var http = require('http');
+var https = require('https');
 var fs = require('fs');
 var coffee = require('coffee-script');
 var optimist = require('optimist');
+
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
 optimist.usage(
   'Usage:\n' +
@@ -24,9 +27,9 @@ var post = function (seed) {
   };
   
   var servers = {
-    local: { host: '127.0.0.1', port: '3000' },
-    staging: { host: 'dev.zooniverse.org', port: 80 },
-    production: { host: 'api.zooniverse.org', port: 80 }
+    local: { host: '127.0.0.1', port: 3000, http: http },
+    staging: { host: 'dev.zooniverse.org', port: 443, http: https },
+    production: { host: 'api.zooniverse.org', port: 443, http: https }
   };
   
   var server = servers[options.env];
@@ -54,7 +57,7 @@ var post = function (seed) {
   
   console.log(message);
   
-  var request = http.request(opts, function(res) {
+  var request = server.http.request(opts, function(res) {
     res.setEncoding('utf-8');
     var responseString = '';
     
@@ -63,12 +66,17 @@ var post = function (seed) {
     });
     
     res.on('end', function() {
-      var resultObject = JSON.parse(responseString);
-      
-      if(resultObject.id) {
-        console.log('Done');
+      try {
+        var resultObject = JSON.parse(responseString);
+        
+        if(resultObject.id) {
+          console.log('Done');
+        }
+        else {
+          console.log('Something went wrong');
+        }
       }
-      else {
+      catch(e) {
         console.log('Something went wrong');
       }
     });
