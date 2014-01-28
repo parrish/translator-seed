@@ -51,7 +51,7 @@ var post = function (seed) {
     auth: process.env.OUROBOROS_AUTH,
     headers: {
       'Content-Type': 'application/json',
-      'Content-Length': json.length
+      'Content-Length': Buffer.byteLength(json)
     }
   };
   
