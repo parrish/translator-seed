@@ -1,12 +1,27 @@
 var http = require('http');
 var fs = require('fs');
 var coffee = require('coffee-script');
+var optimist = require('optimist');
+
+optimist.usage(
+  'Usage:\n' +
+  '  seed-translation --env [local staging production] --deploy-path [file/path]\n\n' +
+  'Examples:\n' +
+  '  seed-translation --env production --deploy-path locales\n' +
+  '  seed-translation --env staging --deploy-path locales\n'
+);
+
+var options = optimist.options({
+  h: { alias: 'help', description: 'Print usage' },
+  e: { alias: 'env', description: 'Environment (local, staging, or production)' },
+  p: { alias: 'deploy-path', description: 'Deploy path for your language files' }
+}).demand('env').argv
 
 var post = function (seed) {
-  var json = JSON.stringify({
+  var json = {
     translation: seed.data,
     locale: seed.locale.toLowerCase().replace(/_/, '-')
-  });
+  };
   
   var servers = {
     local: { host: '127.0.0.1', port: '3000' },
@@ -14,8 +29,16 @@ var post = function (seed) {
     production: { host: 'api.zooniverse.org', port: 80 }
   };
   
-  var env = process.argv[2] || 'local'
-  var server = servers[env];
+  var server = servers[options.env];
+  
+  var message = 'Seeding locale to ' + options.env;
+  
+  if(options['deploy-path']) {
+    json.deploy_path = options['deploy-path'];
+    message += ' with deploy path ' + json.deploy_path
+  }
+  
+  json = JSON.stringify(json);
   
   var opts = {
     host: server.host,
@@ -29,7 +52,7 @@ var post = function (seed) {
     }
   };
   
-  console.log('Seeding locale to', env);
+  console.log(message);
   
   var request = http.request(opts, function(res) {
     res.setEncoding('utf-8');

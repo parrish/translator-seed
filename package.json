@@ -3,11 +3,12 @@
   "bin": {
     "seed-translation": "./bin/seed-translation"
   },
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Seeds a language file from a Zooniverse project to the API",
   "main": "index.js",
   "dependencies": {
-    "coffee-script": "*"
+    "coffee-script": "*",
+    "optimist": "0.6.x"
   },
   "repository": {
     "type": "git",
