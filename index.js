@@ -8,17 +8,18 @@ process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
 optimist.usage(
   'Usage:\n' +
-  '  seed-translation --env [local staging production] --deploy-path [file/path]\n\n' +
+  '  seed-translation --project [name] --env [local staging production] --deploy-path [file/path]\n\n' +
   'Examples:\n' +
-  '  seed-translation --env production --deploy-path locales\n' +
-  '  seed-translation --env staging --deploy-path locales\n'
+  '  seed-translation --project galaxy_zoo --env production --deploy-path locales\n' +
+  '  seed-translation --project galaxy_zoo --env staging --deploy-path locales\n'
 );
 
 var options = optimist.options({
   h: { alias: 'help', description: 'Print usage' },
+  p: { alias: 'project', description: 'Project name ' },
   e: { alias: 'env', description: 'Environment (local, staging, or production)' },
-  p: { alias: 'deploy-path', description: 'Deploy path for your language files' }
-}).demand('env').argv
+  d: { alias: 'deploy-path', description: 'Deploy path for your language files' }
+}).demand('env').demand('project').argv
 
 var post = function (seed) {
   var json = {
@@ -46,7 +47,7 @@ var post = function (seed) {
   var opts = {
     host: server.host,
     port: server.port,
-    path: '/projects/sunspot/translations/seed',
+    path: '/projects/' + options.project + '/translations/seed',
     method: 'POST',
     auth: process.env.OUROBOROS_AUTH,
     headers: {
