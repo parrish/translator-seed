@@ -14,7 +14,7 @@ var post = function (seed) {
     production: { host: 'api.zooniverse.org', port: 80 }
   };
   
-  var env = process.argv[1] || 'local'
+  var env = process.argv[2] || 'local'
   var server = servers[env];
   
   var opts = {
@@ -29,7 +29,7 @@ var post = function (seed) {
     }
   };
   
-  console.log('Seeding local to ', env);
+  console.log('Seeding locale to', env);
   
   var request = http.request(opts, function(res) {
     res.setEncoding('utf-8');
@@ -90,7 +90,7 @@ if(!seed.path) {
   process.exit(0)
 }
 
-console.log('Found language file at ', seed.path);
+console.log('Found language file at', seed.path);
 seed.data = fs.readFileSync(seed.path, 'utf-8');
 
 if(seed.path.match(/\.coffee$/)) {
