@@ -8,9 +8,18 @@ var post = function (seed) {
     locale: seed.locale.toLowerCase().replace(/_/, '-')
   });
   
+  var servers = {
+    local: { host: '127.0.0.1', port: '3000' },
+    staging: { host: 'dev.zooniverse.org', port: 80 },
+    production: { host: 'api.zooniverse.org', port: 80 }
+  };
+  
+  var env = process.argv[1] || 'local'
+  var server = servers[env];
+  
   var opts = {
-    host: '127.0.0.1',
-    port: '3000',
+    host: server.host,
+    port: server.port,
     path: '/projects/sunspot/translations/seed',
     method: 'POST',
     auth: process.env.OUROBOROS_AUTH,
@@ -19,6 +28,8 @@ var post = function (seed) {
       'Content-Length': json.length
     }
   };
+  
+  console.log('Seeding local to ', env);
   
   var request = http.request(opts, function(res) {
     res.setEncoding('utf-8');
@@ -30,7 +41,13 @@ var post = function (seed) {
     
     res.on('end', function() {
       var resultObject = JSON.parse(responseString);
-      console.log(resultObject);
+      
+      if(resultObject.id) {
+        console.log('Done');
+      }
+      else {
+        console.log('Something went wrong');
+      }
     });
   });
   
@@ -69,10 +86,11 @@ var findSeed = function() {
 var seed = findSeed();
 
 if(!seed.path) {
-  console.log('Could not find a seed locale')
+  console.log('Could not find a language file');
   process.exit(0)
 }
 
+console.log('Found language file at ', seed.path);
 seed.data = fs.readFileSync(seed.path, 'utf-8');
 
 if(seed.path.match(/\.coffee$/)) {
