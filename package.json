@@ -3,7 +3,7 @@
   "bin": {
     "seed-translation": "./bin/seed-translation"
   },
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Seeds a language file from a Zooniverse project to the API",
   "main": "index.js",
   "dependencies": {
