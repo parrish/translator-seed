@@ -99,7 +99,7 @@ var checkPath = function(path) {
 
 var findSeed = function() {
   var seedLocales = ['en', 'en-us', 'en-US', 'en_us', 'en_US', 'en-gb', 'en-GB', 'en_gb', 'en_GB'];
-  var localePaths = ['app/lib', 'app/translations', 'lib'];
+  var localePaths = ['app/lib', 'app/translations', 'lib', 'translations'];
   var localeExtensions = ['coffee', 'json'];
   var seedPath = null;
   var seedLocale = null;
